@@ -15,6 +15,8 @@ namespace Utilities {
 		/// </summary>
 		public delegate int keyboardHookProc(int code, int wParam, ref keyboardHookStruct lParam);
 
+		public delegate bool HookedKeyEventHandler(object sender, Key key);
+
 		public struct keyboardHookStruct {
 			public int vkCode;
 			public int scanCode;
@@ -32,9 +34,9 @@ namespace Utilities {
 
 		#region Instance Variables
 		/// <summary>
-		/// The collections of keys to watch for
+		/// The collections of virtual keys to watch for
 		/// </summary>
-		public List<Key> HookedKeys = new List<Key>();
+		private List<int> HookedKeys = new List<int>();
 		/// <summary>
 		/// Handle to the hook, need this to unhook and call the next hook
 		/// </summary>
@@ -45,11 +47,11 @@ namespace Utilities {
 		/// <summary>
 		/// Occurs when one of the hooked keys is pressed
 		/// </summary>
-		public event KeyEventHandler KeyDown;
+		public event HookedKeyEventHandler KeyDown;
 		/// <summary>
 		/// Occurs when one of the hooked keys is released
 		/// </summary>
-		public event KeyEventHandler KeyUp;
+		public event HookedKeyEventHandler KeyUp;
 		#endregion
 
 		#region Constructors and Destructors
@@ -85,6 +87,11 @@ namespace Utilities {
 			UnhookWindowsHookEx(hhook);
 		}
 
+		public void addKeyToWatch(Key key)
+        {
+			HookedKeys.Add(KeyInterop.VirtualKeyFromKey(key));
+        }
+
 		/// <summary>
 		/// The callback for the keyboard hook
 		/// </summary>
@@ -94,15 +101,16 @@ namespace Utilities {
 		/// <returns></returns>
 		public int hookProc(int code, int wParam, ref keyboardHookStruct lParam) {
 			if (code >= 0) {
-				Key key = (Key)lParam.vkCode;
-				if (HookedKeys.Contains(key)) {
-					KeyEventArgs kea = new KeyEventArgs(Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, key);
+				if (HookedKeys.Contains(lParam.vkCode)) {
+					Key key = KeyInterop.KeyFromVirtualKey(lParam.vkCode);
+					bool handled = false;
+					//KeyEventArgs kea = new KeyEventArgs(Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, key);
 					if ((wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) && (KeyDown != null)) {
-						KeyDown(this, kea) ;
+						handled = KeyDown(Keyboard.PrimaryDevice, key) ;
 					} else if ((wParam == WM_KEYUP || wParam == WM_SYSKEYUP) && (KeyUp != null)) {
-						KeyUp(this, kea);
+						handled = KeyUp(Keyboard.PrimaryDevice, key);
 					}
-					if (kea.Handled)
+					if (handled)
 						return 1;
 				}
 			}

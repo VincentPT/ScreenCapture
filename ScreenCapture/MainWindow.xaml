@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ScreenCapture"
         mc:Ignorable="d"
-        Title="MainWindow" Height="292.577" Width="513.567" KeyDown="Window_KeyDown">
+        Title="MainWindow" Height="292.577" Width="513.567" Loaded="Window_Loaded">
     <Grid>
         <Button Content="Click or Press 'Ctrl + Shift + 1' to Capture" Width="250" Height="30" Click="Button_Click"></Button>
     </Grid>
