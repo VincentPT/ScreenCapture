@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -22,6 +23,7 @@ namespace ScreenCapture
     public partial class MainWindow : Window
     {
         globalKeyboardHook gkh = new globalKeyboardHook();
+        List<FullScreenWindow> CapturedWindows;
 
         public MainWindow()
         {
@@ -40,7 +42,32 @@ namespace ScreenCapture
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            CapturedWindows = new List<FullScreenWindow>();
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                FullScreenWindow aScreen = new FullScreenWindow();
+                var s = screen.WorkingArea;
+                aScreen.Left = s.X;
+                aScreen.Top = s.Y;
+                aScreen.Width = s.Width;
+                aScreen.Height = s.Height;
+                CapturedWindows.Add(aScreen);
 
+                aScreen.Closed += AScreen_Closed;
+                aScreen.Topmost = true;
+                aScreen.Show();
+            }
+        }
+
+        private void AScreen_Closed(object sender, EventArgs e)
+        {
+            foreach(var window in CapturedWindows)
+            {
+                if(sender != window)
+                {
+                    window.Close();
+                }
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -49,6 +76,13 @@ namespace ScreenCapture
             gkh.addKeyToWatch(Key.B);
             gkh.KeyDown += new globalKeyboardHook.HookedKeyEventHandler(Window_KeyDown);
             gkh.KeyUp += new globalKeyboardHook.HookedKeyEventHandler(Window_KeyUp);
+            
+            gkh.hook();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            gkh.unhook();
         }
     }
 }

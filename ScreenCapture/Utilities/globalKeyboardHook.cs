@@ -41,6 +41,8 @@ namespace Utilities {
 		/// Handle to the hook, need this to unhook and call the next hook
 		/// </summary>
 		IntPtr hhook = IntPtr.Zero;
+
+		private static globalKeyboardHook Instance;
 		#endregion
 
 		#region Events
@@ -59,7 +61,8 @@ namespace Utilities {
 		/// Initializes a new instance of the <see cref="globalKeyboardHook"/> class and installs the keyboard hook.
 		/// </summary>
 		public globalKeyboardHook() {
-			hook();
+			Instance = this;
+			//hook();
 		}
 
 		/// <summary>
@@ -67,7 +70,7 @@ namespace Utilities {
 		/// <see cref="globalKeyboardHook"/> is reclaimed by garbage collection and uninstalls the keyboard hook.
 		/// </summary>
 		~globalKeyboardHook() {
-			unhook();
+			//unhook();
 		}
 		#endregion
 
@@ -99,22 +102,22 @@ namespace Utilities {
 		/// <param name="wParam">The event type</param>
 		/// <param name="lParam">The keyhook event information</param>
 		/// <returns></returns>
-		public int hookProc(int code, int wParam, ref keyboardHookStruct lParam) {
+		static public int hookProc(int code, int wParam, ref keyboardHookStruct lParam) {
 			if (code >= 0) {
-				if (HookedKeys.Contains(lParam.vkCode)) {
+				if (Instance.HookedKeys.Contains(lParam.vkCode)) {
 					Key key = KeyInterop.KeyFromVirtualKey(lParam.vkCode);
 					bool handled = false;
 					//KeyEventArgs kea = new KeyEventArgs(Keyboard.PrimaryDevice, Keyboard.PrimaryDevice.ActiveSource, 0, key);
-					if ((wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) && (KeyDown != null)) {
-						handled = KeyDown(Keyboard.PrimaryDevice, key) ;
-					} else if ((wParam == WM_KEYUP || wParam == WM_SYSKEYUP) && (KeyUp != null)) {
-						handled = KeyUp(Keyboard.PrimaryDevice, key);
+					if ((wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) && (Instance.KeyDown != null)) {
+						handled = Instance.KeyDown(Keyboard.PrimaryDevice, key) ;
+					} else if ((wParam == WM_KEYUP || wParam == WM_SYSKEYUP) && (Instance.KeyUp != null)) {
+						handled = Instance.KeyUp(Keyboard.PrimaryDevice, key);
 					}
 					if (handled)
 						return 1;
 				}
 			}
-			return CallNextHookEx(hhook, code, wParam, ref lParam);
+			return CallNextHookEx(Instance.hhook, code, wParam, ref lParam);
 		}
 		#endregion
 
