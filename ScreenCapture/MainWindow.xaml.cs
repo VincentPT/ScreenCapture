@@ -43,20 +43,23 @@ namespace ScreenCapture
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             CapturedWindows = new List<FullScreenWindow>();
-            foreach (Screen screen in Screen.AllScreens)
-            {
-                FullScreenWindow aScreen = new FullScreenWindow();
-                var s = screen.WorkingArea;
-                aScreen.Left = s.X;
-                aScreen.Top = s.Y;
-                aScreen.Width = s.Width;
-                aScreen.Height = s.Height;
-                CapturedWindows.Add(aScreen);
 
-                aScreen.Closed += AScreen_Closed;
-                aScreen.Topmost = true;
-                aScreen.Show();
-            }
+            System.Drawing.Rectangle totalSize = System.Drawing.Rectangle.Empty;
+            foreach (Screen s in Screen.AllScreens)
+                totalSize = System.Drawing.Rectangle.Union(totalSize, s.Bounds);
+
+            FullScreenWindow aScreen = new FullScreenWindow();
+            aScreen.Width = totalSize.Width;
+            aScreen.Height = totalSize.Height;
+
+            aScreen.Left = totalSize.Left;
+            aScreen.Top = totalSize.Top;
+
+            CapturedWindows.Add(aScreen);
+
+            aScreen.Closed += AScreen_Closed;
+            //aScreen.Topmost = true;
+            aScreen.Show();
         }
 
         private void AScreen_Closed(object sender, EventArgs e)

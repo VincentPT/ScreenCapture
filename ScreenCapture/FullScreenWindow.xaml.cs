@@ -32,14 +32,9 @@ namespace ScreenCapture
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Escape)
-            {
+            {                
                 this.Close();
             }
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Maximized;
         }
     }
 }
