@@ -42,6 +42,11 @@ namespace Utilities {
 		/// </summary>
 		IntPtr hhook = IntPtr.Zero;
 
+		/// <summary>
+		/// Handle to hook proc, keep it alive until the hook uninstalled to make sure other process can invoke the proc
+		/// </summary>
+		private keyboardHookProc hHookProc;
+
 		private static globalKeyboardHook Instance;
 		#endregion
 
@@ -62,6 +67,7 @@ namespace Utilities {
 		/// </summary>
 		public globalKeyboardHook() {
 			Instance = this;
+			hHookProc = hookProc;
 			//hook();
 		}
 
@@ -80,7 +86,7 @@ namespace Utilities {
 		/// </summary>
 		public void hook() {
 			IntPtr hInstance = LoadLibrary("User32");
-			hhook = SetWindowsHookEx(WH_KEYBOARD_LL, hookProc, hInstance, 0);
+			hhook = SetWindowsHookEx(WH_KEYBOARD_LL, hHookProc, hInstance, 0);
 		}
 
 		/// <summary>
