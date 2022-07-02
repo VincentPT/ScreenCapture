@@ -5,8 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ScreenCapture"
         mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="Manual"
-        Title="FullScreenWindow" KeyDown="Window_KeyDown" AllowsTransparency="True" Opacity="0.5">
-    <Grid KeyDown="Grid_KeyDown">
-
-    </Grid>
+        Title="FullScreenWindow" KeyDown="Window_KeyDown" Initialized="Window_Initialized">
+    <Canvas x:Name="DrawingBoard" MouseLeftButtonDown="DrawingBoard_MouseLeftButtonDown" MouseLeftButtonUp="DrawingBoard_MouseLeftButtonUp" MouseMove="DrawingBoard_MouseMove"/>    
 </Window>

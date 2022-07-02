@@ -45,15 +45,15 @@ namespace ScreenCapture
             CapturedWindows = new List<FullScreenWindow>();
 
             System.Drawing.Rectangle totalSize = System.Drawing.Rectangle.Empty;
+            var allScreens = Screen.AllScreens;
             foreach (Screen s in Screen.AllScreens)
                 totalSize = System.Drawing.Rectangle.Union(totalSize, s.Bounds);
-
             FullScreenWindow aScreen = new FullScreenWindow();
-            aScreen.Width = totalSize.Width;
+            aScreen.Width = totalSize.Width + 20;
             aScreen.Height = totalSize.Height;
 
-            aScreen.Left = totalSize.Left;
-            aScreen.Top = totalSize.Top;
+            aScreen.Left = totalSize.Left - 7;
+            aScreen.Top = totalSize.Top - 7;
 
             CapturedWindows.Add(aScreen);
 

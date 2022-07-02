@@ -59,6 +59,10 @@
     <Compile Include="FullScreenWindow.xaml.cs">
       <DependentUpon>FullScreenWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ScreenCaptureA.cs" />
+    <Compile Include="SimpleDrawingCanvas.xaml.cs">
+      <DependentUpon>SimpleDrawingCanvas.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\globalKeyboardHook.cs" />
     <Page Include="FullScreenWindow.xaml">
       <SubType>Designer</SubType>
@@ -76,6 +80,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SimpleDrawingCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
