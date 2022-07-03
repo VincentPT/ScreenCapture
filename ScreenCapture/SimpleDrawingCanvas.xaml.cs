@@ -28,13 +28,14 @@ namespace ScreenCapture
         bool mouseDrag = false;
         Point firstDown;
         Rectangle currentCreatingElement = null;
-        private void DrawingCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             mouseDrag = true;
             firstDown = e.GetPosition(DrawingCanvas);
+            e.Handled = true;
         }
 
-        private void DrawingCanvas_MouseMove(object sender, MouseEventArgs e)
+        private void OnMouseMove(object sender, MouseEventArgs e)
         {
             var currentPos = e.GetPosition(DrawingCanvas);
             if(mouseDrag)
@@ -43,6 +44,8 @@ namespace ScreenCapture
                 if (currentCreatingElement == null)
                 {
                     Rectangle rectangle = new Rectangle();
+                    rectangle.StrokeThickness = 1;
+                    rectangle.Stroke = new SolidColorBrush(Colors.Red);
                     DrawingCanvas.Children.Add(rectangle);
                     currentCreatingElement = rectangle;
                 }
@@ -51,13 +54,16 @@ namespace ScreenCapture
                 currentCreatingElement.Height = rect.Height;
                 Canvas.SetLeft(currentCreatingElement, rect.X);
                 Canvas.SetTop(currentCreatingElement, rect.Y);
+
+                e.Handled = true;
             }
         }
 
-        private void DrawingCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             mouseDrag = false;
             currentCreatingElement = null;
+            e.Handled = true;
         }
     }
 }

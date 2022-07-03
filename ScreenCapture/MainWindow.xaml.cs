@@ -42,6 +42,10 @@ namespace ScreenCapture
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            //Test a = new Test();
+            //a.Show();
+            //return;
+
             CapturedWindows = new List<FullScreenWindow>();
 
             System.Drawing.Rectangle totalSize = System.Drawing.Rectangle.Empty;

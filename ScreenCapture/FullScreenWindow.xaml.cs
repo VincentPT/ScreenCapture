@@ -67,6 +67,17 @@ namespace ScreenCapture
             DrawingBoard.Children.Add(border);
 
             theMask = border;
+            //{
+            //    theWorkingArea = new SimpleDrawingCanvas();
+            //    theWorkingArea.Width = 200;
+            //    theWorkingArea.Height = 200;
+            //    Canvas.SetLeft(theWorkingArea, 100);
+            //    Canvas.SetTop(theWorkingArea, 100);
+
+            //    DrawingBoard.Children.Add(theWorkingArea);
+
+            //    UpdateClip();
+            //}
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)
@@ -87,6 +98,10 @@ namespace ScreenCapture
         {
             mouseDrag = false;
             workingAreaCreateDone = theWorkingArea != null;
+            if(theWorkingArea != null)
+            {
+                theWorkingArea.IsHitTestVisible = true;
+            }
         }
 
         private void UpdateClip()
@@ -137,6 +152,7 @@ namespace ScreenCapture
                 if(theWorkingArea == null)
                 {
                     theWorkingArea = new SimpleDrawingCanvas();
+                    theWorkingArea.IsHitTestVisible = false;
                     DrawingBoard.Children.Add(theWorkingArea);
                 }
                 Canvas.SetLeft(theWorkingArea, holeRect.Left);

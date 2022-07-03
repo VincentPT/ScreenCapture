@@ -6,5 +6,5 @@
         xmlns:local="clr-namespace:ScreenCapture"
         mc:Ignorable="d" WindowStyle="None" WindowStartupLocation="Manual"
         Title="FullScreenWindow" KeyDown="Window_KeyDown" Initialized="Window_Initialized">
-    <Canvas x:Name="DrawingBoard" MouseLeftButtonDown="DrawingBoard_MouseLeftButtonDown" MouseLeftButtonUp="DrawingBoard_MouseLeftButtonUp" MouseMove="DrawingBoard_MouseMove"/>    
+    <Canvas x:Name="DrawingBoard"  MouseLeftButtonDown="DrawingBoard_MouseLeftButtonDown" MouseLeftButtonUp="DrawingBoard_MouseLeftButtonUp" MouseMove="DrawingBoard_MouseMove"/>    
 </Window>

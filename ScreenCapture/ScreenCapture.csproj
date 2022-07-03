@@ -63,6 +63,9 @@
     <Compile Include="SimpleDrawingCanvas.xaml.cs">
       <DependentUpon>SimpleDrawingCanvas.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Test.xaml.cs">
+      <DependentUpon>Test.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\globalKeyboardHook.cs" />
     <Page Include="FullScreenWindow.xaml">
       <SubType>Designer</SubType>
@@ -81,6 +84,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SimpleDrawingCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Test.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

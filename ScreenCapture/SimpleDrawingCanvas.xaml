@@ -7,8 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Border BorderBrush="Red" BorderThickness="2">
-        <Canvas x:Name="DrawingCanvas" MouseLeftButtonDown="DrawingCanvas_MouseLeftButtonDown" MouseMove="DrawingCanvas_MouseMove" MouseLeftButtonUp="DrawingCanvas_MouseLeftButtonUp" >
-            <Ellipse Width="100" Height="100" StrokeThickness="1" Stroke="Blue"></Ellipse>
+        <Canvas x:Name="DrawingCanvas" Background="Transparent" MouseLeftButtonDown="OnMouseLeftButtonDown" MouseLeftButtonUp="OnMouseLeftButtonUp" MouseMove="OnMouseMove">
         </Canvas>
     </Border>
 </UserControl>
