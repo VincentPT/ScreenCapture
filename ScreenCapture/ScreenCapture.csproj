@@ -118,5 +118,18 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\comment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\text.png" />
+    <Resource Include="Resources\undo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\rectangle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\line.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -21,7 +21,7 @@ namespace ScreenCapture
     {
         BitmapSource capturedScreenshot;
         Border theMask;
-        SimpleDrawingCanvas theWorkingArea;
+        Border theWorkingArea;
         public FullScreenWindow()
         {
             InitializeComponent();
@@ -101,7 +101,16 @@ namespace ScreenCapture
             if(theWorkingArea != null)
             {
                 theWorkingArea.IsHitTestVisible = true;
+                this.Cursor = Cursors.SizeAll;
             }
+        }
+
+        private Border CreateWorkingArea()
+        {
+            var drawingCanvas = new SimpleDrawingCanvas();
+            Border workingArea = new Border { BorderThickness = new Thickness(2), BorderBrush = new SolidColorBrush(Colors.Red) };
+            workingArea.Child = drawingCanvas;
+            return workingArea;
         }
 
         private void UpdateClip()
@@ -151,9 +160,9 @@ namespace ScreenCapture
 
                 if(theWorkingArea == null)
                 {
-                    theWorkingArea = new SimpleDrawingCanvas();
-                    theWorkingArea.IsHitTestVisible = false;
+                    theWorkingArea = CreateWorkingArea();
                     DrawingBoard.Children.Add(theWorkingArea);
+                    theWorkingArea.IsHitTestVisible = false;
                 }
                 Canvas.SetLeft(theWorkingArea, holeRect.Left);
                 Canvas.SetTop(theWorkingArea, holeRect.Top);
