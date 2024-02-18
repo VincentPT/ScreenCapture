@@ -41,25 +41,22 @@ namespace ScreenCapture
             Line
         }
 
-        private void CreateUIElement()
+        enum CommentCreationStage
         {
-            switch (DrawingMode)
-            {
-                case EditMode.Line:
-                    currentCreatingElement = new Line();
-                    break;
-                case EditMode.Comment:
-                    break;
-                case EditMode.Text:
-                    break;
-                case EditMode.Rect:
-                    break;
-            }
+            None,
+            First,
+            Last,
         }
+
+        CommentCreationStage _commentCreationStage = CommentCreationStage.None;
 
         private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (DrawingMode == EditMode.None) return;
+            if(DrawingMode == EditMode.Comment && _commentCreationStage != CommentCreationStage.First)
+            {
+                return;
+            }
 
             mouseDrag = true;
             firstDown = e.GetPosition(DrawingCanvas);
@@ -70,8 +67,8 @@ namespace ScreenCapture
                 case EditMode.Line:
                     _elementBuilder = new LineElementBuilder();
                     break;
-                case EditMode.Comment:
-                    _elementBuilder = new CommentElementBuilder();
+                case EditMode.Comment:               
+                    _elementBuilder = new RectElementBuilder();
                     break;
                 case EditMode.Text:
                     _elementBuilder = new TextElementBuilder();
@@ -101,8 +98,42 @@ namespace ScreenCapture
         private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (DrawingMode == EditMode.None) return;
-            currentCreatingElement = null;
-            mouseDrag = false;
+            // check if the comment first part was created...
+            if (DrawingMode == EditMode.Comment && _commentCreationStage == CommentCreationStage.First)
+            {
+                //...then create comment next part (connection line)
+                _commentCreationStage = CommentCreationStage.Last;
+                //Point startPoint = new Point();
+                //startPoint.X = (Canvas.GetLeft(currentCreatingElement) + Canvas.GetRight(currentCreatingElement)) / 2;
+                //startPoint.Y = (Canvas.GetTop(currentCreatingElement) + Canvas.GetBottom(currentCreatingElement)) / 2;
+
+                //_elementBuilder = new LineElementBuilder();
+                //currentCreatingElement = _elementBuilder.CreateElement(this);
+                //_elementBuilder.UpdateElement(currentCreatingElement, startPoint, startPoint);
+
+                var currentPoint = e.GetPosition(DrawingCanvas);
+                _elementBuilder = new TextElementBuilder();
+                currentCreatingElement = _elementBuilder.CreateElement(this);
+                _elementBuilder.UpdateElement(currentCreatingElement, currentPoint, currentPoint);
+                DrawingCanvas.Children.Add(currentCreatingElement);
+
+                var textElement = (TextBox)(((StackPanel)currentCreatingElement).Children[0]);
+                textElement.Text = "Click to insert comment";
+                textElement.SelectAll();
+                textElement.Focus();
+            }
+            else if (DrawingMode == EditMode.Comment && _commentCreationStage == CommentCreationStage.Last)
+            {
+                _commentCreationStage = CommentCreationStage.First;
+                currentCreatingElement = null;
+                mouseDrag = false;
+            }
+            else
+            {
+                currentCreatingElement = null;
+                mouseDrag = false;
+            }
+            
             e.Handled = true;
         }
 
@@ -127,6 +158,7 @@ namespace ScreenCapture
         private void Button_Coment_Click(object sender, RoutedEventArgs e)
         {
             DrawingMode = EditMode.Comment;
+            _commentCreationStage = CommentCreationStage.First;
         }
         private void Button_Text_Click(object sender, RoutedEventArgs e)
         {
@@ -198,34 +230,6 @@ namespace ScreenCapture
             public override UIElement CreateElement(SimpleDrawingCanvas context)
             {
                 StackPanel horizontal = new StackPanel { Orientation = Orientation.Horizontal };
-                TextBox textBox = new TextBox
-                {
-                    AcceptsReturn = true,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Text = "Type your text here",
-                    Background = new SolidColorBrush(Colors.Transparent)
-                };
-
-                textBox.SelectAll();
-
-                horizontal.Children.Add(textBox);
-
-                return horizontal;
-            }
-            public override void UpdateElement(UIElement element, Point firstPoint, Point currentPoint)
-            {
-                Canvas.SetLeft(element, firstPoint.X);
-                Canvas.SetTop(element, firstPoint.Y);
-
-                ((StackPanel)element).Children[0].Focus();
-            }
-        }
-
-        class CommentElementBuilder : UIElementBuilder
-        {
-            public override UIElement CreateElement(SimpleDrawingCanvas context)
-            {
-                StackPanel horizontal = new StackPanel { Orientation = Orientation.Horizontal };                
                 TextBox textBox = new TextBox
                 {
                     AcceptsReturn = true,
